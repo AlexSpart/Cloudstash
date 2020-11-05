@@ -1,4 +1,4 @@
-import "_Definitions/steIgeneral__cloudstash_no_sourceCode_VT_version_v2.tosca";
+import "_Definitions/steIgeneral__cloudstash.tosca";
 
 types = {
   radon.nodes.aws.AwsLambdaFunction,
