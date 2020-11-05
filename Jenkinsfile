@@ -21,7 +21,7 @@ pipeline {
             steps {
                 sh 'echo Start VT container and perform verify test...'
                 sh 'unzip -o ${DEPLOY_FILE}'
-                sh 'mkdir -p $PWD/tmp/radon && cp -r _definitions $PWD/tmp/radon/_definitions && cp /radon-vt/main.cdl $PWD/tmp/radon'
+                sh 'mkdir -p $PWD/tmp/radon && cp -r _definitions $PWD/tmp/radon/_definitions && cp $PWD/radon-vt/main.cdl $PWD/tmp/radon'
                 sh 'docker run --name "${VT_DOCKER_NAME}" --rm -d -p 5000:5000 -v $PWD/tmp/radon:/tmp/radon/container marklawimperial/verification-tool'
                 sh 'sleep 5'
                 sh 'docker exec ${VT_DOCKER_NAME} sh -c "cd /tmp/radon/container && pwd && ls -al && cat main.cdl"'
