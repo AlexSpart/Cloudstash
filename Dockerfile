@@ -5,7 +5,7 @@ RUN apk --update add python3 py3-pip openssl ca-certificates py3-openssl wget gi
 RUN apk --update add --virtual build-dependencies libffi-dev openssl-dev python3-dev build-base
 RUN pip install --upgrade pip \
   && pip install pyyaml ansible \
-  && pip install --index-url https://test.pypi.org/simple/ opera==0.6.2.dev7
+  && pip install -i https://test.pypi.org/simple/ opera==0.6.3.dev2
 RUN apk del build-dependencies
 RUN pip list
 CMD tail -f /dev/null
