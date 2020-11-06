@@ -1,6 +1,6 @@
 {
   "name": "Test",
-  "repository_url": "Cloudstash",
+  "repository_url": "Cloudstash/radon-ctt",
   "sut_tosca_path": "cloudstash.csar",
   "ti_tosca_path": "ti-ec2.csar",
   "ti_inputs_path": "inputs.yaml",
