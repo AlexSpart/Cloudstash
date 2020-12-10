@@ -23,7 +23,7 @@ pipeline {
                     // install the necessary dependencies as pip packages
                     // unwrap the csar and deploy the file.
                     sh '''
-                        pip3 install awscli boto boto3 botocore ansible opera --user
+                        pip3 install ansible opera --user
                         PATH="$(python3 -m site --user-base)/bin:${PATH}"
                         opera init $DEPLOY_FILE
                         opera deploy
