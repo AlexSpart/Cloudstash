@@ -20,14 +20,14 @@ pipeline {
             }
             steps {
                 withEnv(["HOME=${env.WORKSPACE}"]) {  
-                    sh 'echo Creating image opera-deploy...'
-                    sh 'docker build --tag opera-deploy .'
-                    sh 'echo Starting container prqCont...'
-                    sh 'mkdir -p $PWD/tmp/radon && cp -r $DEPLOY_FILE $PWD/tmp/radon'
-                    sh 'docker run --name ${OPERA_DOCKER_NAME} --rm -d -p 18080:18080 -v $PWD/tmp/radon:/tmp/radon/container -e "AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}" -e "AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}" -e "CTT_FAAS_ENABLED=1" opera-deploy'
-                    sh 'sleep 5'
-                    sh 'docker exec ${OPERA_DOCKER_NAME} sh -c "cd /tmp/radon/container && opera init $DEPLOY_FILE && opera deploy "'
-                    sh 'docker stop $OPERA_DOCKER_NAME'
+                    // install the necessary dependencies as pip packages
+                    // unwrap the csar and deploy the file.
+                    sh '''
+                        pip3 install awscli boto boto3 botocore ansible opera --user
+                        PATH="$(python3 -m site --user-base)/bin:${PATH}"
+                        opera init $DEPLOY_FILE
+                        opera deploy
+                    '''
                 }
     
             }
