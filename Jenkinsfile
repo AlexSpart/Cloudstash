@@ -14,7 +14,7 @@ pipeline {
         }
         stage('Radon VT') {
             environment {
-                DEPLOY_FILE = 'cloudstash.csar'
+                DEPLOY_FILE = 'ThumbnailGeneration.csar'
                 VT_DOCKER_NAME = 'RadonVT'
                 VT_FILES_PATH = '{"path":"/tmp/radon/container/main.cdl"}'
             }
@@ -31,7 +31,7 @@ pipeline {
         }
         stage('Run DPT') {
             environment {
-                DEPLOY_FILE = 'cloudstash.csar'
+                DEPLOY_FILE = 'ThumbnailGeneration.csar'
                 DPT_DOCKER_NAME = 'RadonDPT'
             }
             steps {
@@ -45,7 +45,7 @@ pipeline {
         }
         stage('Opera Deploy') {
             environment {
-                DEPLOY_FILE = 'cloudstash.csar'
+                DEPLOY_FILE = 'ThumbnailGeneration.csar'
                 OPERA_DOCKER_NAME = 'prqContOpera'
             }
             steps {
