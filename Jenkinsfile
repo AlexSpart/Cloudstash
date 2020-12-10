@@ -12,11 +12,9 @@ pipeline {
                 }
             }
         }
-
         stage('Opera Deploy') {
             environment {
                 DEPLOY_FILE = 'ThumbnailGeneration.csar'
-                OPERA_DOCKER_NAME = 'prqContOpera'
             }
             steps {
                 withEnv(["HOME=${env.WORKSPACE}"]) {  
