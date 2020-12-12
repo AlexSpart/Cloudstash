@@ -12,27 +12,24 @@ pipeline {
                 }
             }
         }
-        stage('Run DPT') {
+        stage('Run VT') {
             environment {
                 DEPLOY_FILE = 'cloudstash.csar'
-                DPT_DOCKER_NAME = 'radonconsortium/radon-dp:latest'
-                GITHUB_REPO = 'AlexSpart/Cloudstash'
+                VT_DOCKER_NAME = 'RadonVT'
+                VT_FILES_PATH = '{"path":"/tmp/radon/container/main.cdl"}'
             }
             steps {
-                // Pull radonconsortium/radon-dp:latest image from Dockerhub
-                sh 'docker pull $DPT_DOCKER_NAME'
-                // Create temporary
-                sh 'mkdir -p tmp/radon-dp-volume'
-                // Download a suitable model 
-                sh 'docker run -v tmp/radon-dp-volume:/app $DPT_DOCKER_NAME radon-defect-predictor download-model tosca github $GITHUB_REPO'
-                // Move CSAR into tmp library. This is colocated with the fetched radondp_model.joblib
-                sh 'cp $DEPLOY_FILE tmp/radon-dp-volume'
-                // Run predict
-                sh 'docker run -v tmp/radon-dp-volume:/app $DPT_DOCKER_NAME radon-defect-predictor predict tosca $DEPLOY_FILE'
-                // Results are available at:
-                sh 'cat tmp/radon-dp-volume/radondp_predictions.json'
+                // Unzip the csar
+                sh 'unzip -o ${DEPLOY_FILE}'
+                // Move relevant files to temp folder. 
+                sh 'mkdir -p tmp/radon-vt && cp -r _definitions tmp/radon-vt/_definitions && cp radon-vt/main.cdl tmp/radon-vt'
+                // Run Verification Tool as Docker image and open port 5000 
+                sh 'docker run --name "${VT_DOCKER_NAME}" --rm -d -p 5000:5000 -v /tmp/radon-vt:/tmp/radon/container marklawimperial/verification-tool'
+                // Verify the model with the main.cdl restrictions. 
+                sh 'curl -X POST -H "Content-type: application/json" http://localhost:5000/solve/ -d ${VT_FILES_PATH}'
+                sh 'docker stop ${VT_DOCKER_NAME}'
             }
-        }
+        } 
     }
     post { 
         always { 
