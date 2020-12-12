@@ -30,8 +30,9 @@ pipeline {
                 sh 'docker run --name $VT_DOCKER_NAME --rm -d -p 5000:5000 -v $PWD/tmp/radon-vt:/tmp $VT_DOCKER_IMAGE'
                 // Wait some sec for the container to spin up.
                 sh 'sleep 5'
-                // Verify the model with the main.cdl restrictions. - Detect inconsistencies
+                // Verify the model with the main.cdl restrictions. - Detect inconsistencies.
                 sh 'curl -X POST -H "Content-type: application/json" http://localhost:5000/solve/ -d $VT_FILES_PATH'
+                // Correct the model to comply with the main.cdl restrictions. - Propose correction of inconsistencies.
                 sh 'curl -X POST -H "Content-type: application/json" http://localhost:5000/correct/ -d $VT_FILES_PATH'
                 // Stop the container
                 sh 'docker stop $VT_DOCKER_NAME'
@@ -61,4 +62,4 @@ pipeline {
             cleanWs()
         }
     }
-}
+}   
