@@ -12,22 +12,25 @@ pipeline {
                 }
             }
         }
-        stage('Opera Deploy') {
+        stage('Run DPT') {
             environment {
-                DEPLOY_FILE = 'ThumbnailGeneration.csar'
+                DEPLOY_FILE = 'cloudstash.csar'
+                DPT_DOCKER_NAME = 'radonconsortium/radon-dp:latest'
+                GITHUB_REPO = 'AlexSpart/Cloudstash'
             }
             steps {
-                withEnv(["HOME=${env.WORKSPACE}"]) {  
-                    // install the necessary dependencies as pip packages
-                    // unwrap the csar and deploy the file.
-                    sh '''
-                        pip3 install ansible opera --user
-                        PATH="$(python3 -m site --user-base)/bin:${PATH}"
-                        opera init $DEPLOY_FILE
-                        opera deploy
-                    '''
-                }
-    
+                // Pull radonconsortium/radon-dp:latest image from Dockerhub
+                sh 'docker pull $DPT_DOCKER_NAME'
+                // Create temporary
+                sh 'mkdir -p tmp/radon-dp-volume'
+                // Download a suitable model 
+                sh 'docker run -v tmp/radon-dp-volume:/app $DPT_DOCKER_NAME radon-defect-predictor download-model tosca github $GITHUB_REPO'
+                // Move CSAR into tmp library. This is colocated with the fetched radondp_model.joblib
+                sh 'cp $DEPLOY_FILE tmp/radon-dp-volume'
+                // Run predict
+                sh 'docker run -v tmp/radon-dp-volume:/app $DPT_DOCKER_NAME radon-defect-predictor predict tosca $DEPLOY_FILE'
+                // Results are available at:
+                sh 'cat tmp/radon-dp-volume/radondp_predictions.json'
             }
         }
     }
