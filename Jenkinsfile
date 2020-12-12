@@ -48,7 +48,6 @@ pipeline {
                     // unwrap the csar and deploy the file.
                     sh '''
                         pip3 install ansible opera --user
-                        pip3 list
                         PATH="$(python3 -m site --user-base)/bin:${PATH}"
                         opera init $DEPLOY_FILE
                         opera deploy
