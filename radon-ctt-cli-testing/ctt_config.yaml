@@ -1,9 +1,9 @@
 {
-  "name": "Cli-test-unique-id",
-  "repository_url": "https://github.com/AlexSpart/Cloudstash/radon-ctt-cli-testing",
-  "sut_tosca_path": "todolist.csar",
-  "ti_tosca_path": "DeploymentTestAgent.csar",
-  "ti_inputs_path": "inputs.yaml",
-  "test_id": "test_id-for-cli-testing",
-  "result_destination_path": "/tmp/results.zip"
+  'name': 'Cli-test-unique-id',
+  'repository_url': 'https://github.com/AlexSpart/Cloudstash/radon-ctt-cli-testing',
+  'sut_tosca_path': 'todolist.csar',
+  'ti_tosca_path': 'DeploymentTestAgent.csar',
+  'ti_inputs_path': 'inputs.yaml',
+  'result_destination_path': '/tmp/results.zip',
+  'test_id': 'deploymentTest_test_id-for-cli_01',
 }
