@@ -1,5 +1,5 @@
 {
-  "name": "Cli-test",
+  "name": "Cli-test-unique-id",
   "repository_url": "https://github.com/AlexSpart/Cloudstash/radon-ctt-cli-testing",
   "sut_tosca_path": "todolist.csar",
   "ti_tosca_path": "DeploymentTestAgent.csar",
