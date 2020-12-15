@@ -59,9 +59,31 @@ pipeline {
                 sh 'cat tmp/radon-dp-volume/radondp_predictions.json'
             }
         }
+        stage('Fetch blueprint from TL') {
+            environment {
+                //Template Library credentials. (Stored in Jenkins platform )
+                TEMPLATE_LIBRARY_USER = credentials('template-lib-user')
+                TEMPLATE_LIBRARY_PASS = credentials('template-lib-pass')
+                // The reference name used to store a blueprint in Template Library.
+                csar_reference = 'thumbnail-generation'
+                // The version used to store a blueprint in Template Library.
+                csar_version = '1.0.0'
+            }
+            steps {
+                // Authenticate yourself using the environment variables TEMPLATE_LIBRARY_USER & TEMPLATE_LIBRARY_PASS 
+                // GET command to download the blueprint from Template Library. (Assuming the the user has access to the specified blueprint)
+                sh '''
+                    echo $csar_reference
+                    echo $csar_version
+                    
+                    BEARER_TOKEN=$(curl -X POST https://template-library-radon.xlab.si/api/auth/login -H "accept: */*" -H "Content-Type: application/json" -d "{\"username\":\"$TEMPLATE_LIBRARY_USER\",\"password\":\"$TEMPLATE_LIBRARY_PASS\"}" | python3 -c "import sys, json; print(json.load(sys.stdin)['token'])")
+                    curl -X GET https://template-library-radon.xlab.si/api/templates/$csar_reference/versions/$csar_version/files -H "accept: application/octet-stream" -H "Authorization: Bearer $BEARER_TOKEN" --output blueprint
+                '''
+            }
+        }
         stage('Opera deploy') {
             environment {
-                DEPLOY_FILE = 'ThumbnailGeneration.csar'
+                DEPLOY_FILE = 'blueprint'       // The file previously downloaded from Template Library
             }
              steps {
                 withEnv(["HOME=${env.WORKSPACE}"]) {  
