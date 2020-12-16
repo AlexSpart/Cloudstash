@@ -1,6 +1,6 @@
 {
-  'name': 'Cli-test-unique-id',
-  'repository_url': 'https://github.com/AlexSpart/Cloudstash/radon-ctt-cli-testing',
+  'name': 'ToDoListAPI',
+  'repository_url': 'https://github.com/AlexSpart/Cloudstash/tree/master/radon-ctt-cli-testing',
   'sut_tosca_path': 'todolist.csar',
   'ti_tosca_path': 'DeploymentTestAgent.csar',
   'ti_inputs_path': 'inputs.yaml',
